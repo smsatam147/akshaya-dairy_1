@@ -223,35 +223,35 @@ export default function MilkCollection() {
       {/* Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Entry form */}
-        <div className="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <h2 className="font-semibold text-gray-800 mb-3">Record Entry — {selectedDate}</h2>
-          <form onSubmit={handleSubmit} className="space-y-3">
+        {/* Entry form — compact */}
+        <div className="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-3 self-start">
+          <h2 className="font-semibold text-gray-800 text-sm mb-2">Record Entry — {selectedDate}</h2>
+          <form onSubmit={handleSubmit} className="space-y-2">
             <div>
-              <label className="text-sm font-medium text-gray-700">Cattle *</label>
+              <label className="text-xs font-medium text-gray-600">Cattle *</label>
               <select value={form.cattle_id} onChange={e => setForm(f => ({ ...f, cattle_id: e.target.value }))}
-                className={`mt-1 w-full border rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.cattle_id ? 'border-red-400' : 'border-gray-300'}`}>
+                className={`mt-0.5 w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.cattle_id ? 'border-red-400' : 'border-gray-300'}`}>
                 <option value="">Select cattle…</option>
                 {cattle.map(c => <option key={c.id} value={c.id}>{c.tag_number} — {c.name || 'Unnamed'}</option>)}
               </select>
-              {errors.cattle_id && <p className="text-red-500 text-xs mt-1">{errors.cattle_id}</p>}
+              {errors.cattle_id && <p className="text-red-500 text-xs mt-0.5">{errors.cattle_id}</p>}
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Shift *</label>
+              <label className="text-xs font-medium text-gray-600">Shift *</label>
               <select value={form.shift} onChange={e => setForm(f => ({ ...f, shift: e.target.value }))}
-                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500">
+                className="mt-0.5 w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-primary-500">
                 <option>Morning</option><option>Evening</option>
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Quantity (Litres) *</label>
+              <label className="text-xs font-medium text-gray-600">Quantity (Litres) *</label>
               <input type="number" step="0.01" value={form.quantity_litres} onChange={e => setForm(f => ({ ...f, quantity_litres: e.target.value }))}
-                className={`mt-1 w-full border rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.quantity_litres ? 'border-red-400' : 'border-gray-300'}`}
+                className={`mt-0.5 w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.quantity_litres ? 'border-red-400' : 'border-gray-300'}`}
                 placeholder="e.g. 12.5" />
-              {errors.quantity_litres && <p className="text-red-500 text-xs mt-1">{errors.quantity_litres}</p>}
+              {errors.quantity_litres && <p className="text-red-500 text-xs mt-0.5">{errors.quantity_litres}</p>}
             </div>
             <button type="submit" disabled={submitting}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
               {submitting ? 'Recording…' : (isOnline ? 'Record Entry' : 'Save Offline')}
             </button>
           </form>
@@ -372,117 +372,117 @@ export default function MilkCollection() {
             );
           })()}
 
-          {/* TABLE 2: All-Time Cattle Summary */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
-            <div className="p-4 border-b-2 border-gray-300 flex items-center justify-between">
-              <div>
-                <h2 className="font-semibold text-gray-800">🐄 Total Milk per Cattle — All Time</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Click ✏️ to edit individual entries for a cattle</p>
-              </div>
-              <span className="text-sm font-bold text-green-700 bg-green-50 px-3 py-1 rounded-full border border-green-200">
-                Grand Total: {grandTotal.toFixed(2)} L
-              </span>
+        </div>
+      </div>
+
+      {/* TABLE 2: Monthly Breakdown — full width */}
+      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
+            <div className="p-4 border-b-2 border-gray-300">
+              <h2 className="font-semibold text-gray-800">📅 Monthly Milk Production per Cattle (Litres)</h2>
+              <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
                   <tr>
-                    <th className="px-4 py-3 text-left border border-gray-300">#</th>
-                    <th className="px-4 py-3 text-left border border-gray-300">Cattle Name</th>
-                    <th className="px-4 py-3 text-left border border-gray-300">Tag</th>
-                    <th className="px-4 py-3 text-right border border-gray-300">Morning (L)</th>
-                    <th className="px-4 py-3 text-right border border-gray-300">Evening (L)</th>
-                    <th className="px-4 py-3 text-right border border-gray-300">Total (L)</th>
-                    <th className="px-4 py-3 text-right border border-gray-300">Entries</th>
-                    <th className="px-4 py-3 text-center border border-gray-300">Edit</th>
+                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-10 whitespace-nowrap">Cattle</th>
+                    {monthlyData.months.map(m => (
+                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap">{m}</th>
+                    ))}
+                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap">Total</th>
+                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {cattleSummary.length === 0 ? (
-                    <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No data yet</td></tr>
-                  ) : cattleSummary.map((row, idx) => (
-                    <tr key={row.cattle_id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="px-4 py-2.5 text-gray-400 border border-gray-300">{idx + 1}</td>
-                      <td className="px-4 py-2.5 font-medium text-gray-900 border border-gray-300">{row.cattle_name || '—'}</td>
-                      <td className="px-4 py-2.5 text-gray-500 text-xs border border-gray-300">{row.tag_number}</td>
-                      <td className="px-4 py-2.5 text-right text-blue-700 border border-gray-300">{row.morning_litres.toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right text-orange-700 border border-gray-300">{row.evening_litres.toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right font-bold text-gray-900 border border-gray-300">{row.total_litres.toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right text-gray-500 border border-gray-300">{row.total_entries}</td>
-                      <td className="px-3 py-2.5 text-center border border-gray-300">
-                        <button onClick={() => openEditModal(row.cattle_id, row.cattle_name, null)} className="text-blue-600 hover:text-blue-800 text-base">✏️</button>
-                      </td>
-                    </tr>
-                  ))}
-                  {cattleSummary.length > 0 && (
+                  {monthlyData.cattle.length === 0 ? (
+                    <tr><td colSpan={monthlyData.months.length + 3} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No data yet</td></tr>
+                  ) : monthlyData.cattle.map((cow, idx) => {
+                    const rowTotal = monthlyData.months.reduce((s, m) => s + (cow.months[m] || 0), 0);
+                    const bg = idx % 2 === 0 ? '#fff' : '#f9fafb';
+                    return (
+                      <tr key={cow.cattle_id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="px-4 py-2.5 font-medium text-gray-900 border border-gray-300 sticky left-0 whitespace-nowrap" style={{ backgroundColor: bg }}>{cow.cattle_name}</td>
+                        {monthlyData.months.map(m => (
+                          <td key={m} className="px-3 py-2.5 text-right border border-gray-300 text-gray-700">
+                            {cow.months[m] ? cow.months[m].toFixed(2) : <span className="text-gray-300">—</span>}
+                          </td>
+                        ))}
+                        <td className="px-4 py-2.5 text-right font-bold text-gray-900 border-2 border-gray-400 bg-gray-100">{rowTotal.toFixed(2)}</td>
+                        <td className="px-3 py-2.5 text-center border border-gray-300" style={{ backgroundColor: bg }}>
+                          <button onClick={() => openEditModal(cow.cattle_id, cow.cattle_name, null)} className="text-blue-600 hover:text-blue-800 text-base">✏️</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {monthlyData.cattle.length > 0 && (
                     <tr className="bg-green-50 font-bold">
-                      <td className="px-4 py-2.5 border border-gray-300"></td>
-                      <td className="px-4 py-2.5 text-green-900 border border-gray-300" colSpan={2}>Grand Total</td>
-                      <td className="px-4 py-2.5 text-right text-blue-800 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.morning_litres, 0).toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right text-orange-800 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.evening_litres, 0).toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right text-green-900 border-2 border-green-400">{grandTotal.toFixed(2)} L</td>
-                      <td className="px-4 py-2.5 text-right text-gray-700 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.total_entries, 0)}</td>
-                      <td className="border border-gray-300"></td>
+                      <td className="px-4 py-2.5 text-green-900 border border-gray-300 sticky left-0 bg-green-50">Monthly Total</td>
+                      {monthlyData.months.map(m => {
+                        const colTotal = monthlyData.cattle.reduce((s, cow) => s + (cow.months[m] || 0), 0);
+                        return <td key={m} className="px-3 py-2.5 text-right text-green-800 border border-gray-300">{colTotal.toFixed(2)}</td>;
+                      })}
+                      <td className="px-4 py-2.5 text-right text-green-900 border-2 border-green-400 bg-green-100">
+                        {monthlyData.cattle.reduce((s, cow) => s + monthlyData.months.reduce((ms, m) => ms + (cow.months[m] || 0), 0), 0).toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 bg-green-50"></td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
-          </div>
-
-        </div>
       </div>
 
-      {/* TABLE 3: Monthly Breakdown — full width below grid */}
+      {/* TABLE 3: All-Time Cattle Summary — full width */}
       <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
-        <div className="p-4 border-b-2 border-gray-300">
-          <h2 className="font-semibold text-gray-800">📅 Monthly Milk Production per Cattle (Litres)</h2>
-          <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
+        <div className="p-4 border-b-2 border-gray-300 flex items-center justify-between">
+          <div>
+            <h2 className="font-semibold text-gray-800">🐄 Total Milk per Cattle — All Time</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Click ✏️ to edit individual entries for a cattle</p>
+          </div>
+          <span className="text-sm font-bold text-green-700 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+            Grand Total: {grandTotal.toFixed(2)} L
+          </span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
               <tr>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-10 whitespace-nowrap">Cattle</th>
-                {monthlyData.months.map(m => (
-                  <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap">{m}</th>
-                ))}
-                <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap">Total</th>
-                <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap">Edit</th>
+                <th className="px-4 py-3 text-left border border-gray-300">#</th>
+                <th className="px-4 py-3 text-left border border-gray-300">Cattle Name</th>
+                <th className="px-4 py-3 text-left border border-gray-300">Tag</th>
+                <th className="px-4 py-3 text-right border border-gray-300">Morning (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300">Evening (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300">Total (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300">Entries</th>
+                <th className="px-4 py-3 text-center border border-gray-300">Edit</th>
               </tr>
             </thead>
             <tbody>
-              {monthlyData.cattle.length === 0 ? (
-                <tr><td colSpan={monthlyData.months.length + 3} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No data yet</td></tr>
-              ) : monthlyData.cattle.map((cow, idx) => {
-                const rowTotal = monthlyData.months.reduce((s, m) => s + (cow.months[m] || 0), 0);
-                const bg = idx % 2 === 0 ? '#fff' : '#f9fafb';
-                return (
-                  <tr key={cow.cattle_id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-4 py-2.5 font-medium text-gray-900 border border-gray-300 sticky left-0 whitespace-nowrap" style={{ backgroundColor: bg }}>{cow.cattle_name}</td>
-                    {monthlyData.months.map(m => (
-                      <td key={m} className="px-3 py-2.5 text-right border border-gray-300 text-gray-700">
-                        {cow.months[m] ? cow.months[m].toFixed(2) : <span className="text-gray-300">—</span>}
-                      </td>
-                    ))}
-                    <td className="px-4 py-2.5 text-right font-bold text-gray-900 border-2 border-gray-400 bg-gray-100">{rowTotal.toFixed(2)}</td>
-                    <td className="px-3 py-2.5 text-center border border-gray-300" style={{ backgroundColor: bg }}>
-                      <button onClick={() => openEditModal(cow.cattle_id, cow.cattle_name, null)} className="text-blue-600 hover:text-blue-800 text-base">✏️</button>
-                    </td>
-                  </tr>
-                );
-              })}
-              {monthlyData.cattle.length > 0 && (
-                <tr className="bg-green-50 font-bold">
-                  <td className="px-4 py-2.5 text-green-900 border border-gray-300 sticky left-0 bg-green-50">Monthly Total</td>
-                  {monthlyData.months.map(m => {
-                    const colTotal = monthlyData.cattle.reduce((s, cow) => s + (cow.months[m] || 0), 0);
-                    return <td key={m} className="px-3 py-2.5 text-right text-green-800 border border-gray-300">{colTotal.toFixed(2)}</td>;
-                  })}
-                  <td className="px-4 py-2.5 text-right text-green-900 border-2 border-green-400 bg-green-100">
-                    {monthlyData.cattle.reduce((s, cow) => s + monthlyData.months.reduce((ms, m) => ms + (cow.months[m] || 0), 0), 0).toFixed(2)}
+              {cattleSummary.length === 0 ? (
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No data yet</td></tr>
+              ) : cattleSummary.map((row, idx) => (
+                <tr key={row.cattle_id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  <td className="px-4 py-2.5 text-gray-400 border border-gray-300">{idx + 1}</td>
+                  <td className="px-4 py-2.5 font-medium text-gray-900 border border-gray-300">{row.cattle_name || '—'}</td>
+                  <td className="px-4 py-2.5 text-gray-500 text-xs border border-gray-300">{row.tag_number}</td>
+                  <td className="px-4 py-2.5 text-right text-blue-700 border border-gray-300">{row.morning_litres.toFixed(2)}</td>
+                  <td className="px-4 py-2.5 text-right text-orange-700 border border-gray-300">{row.evening_litres.toFixed(2)}</td>
+                  <td className="px-4 py-2.5 text-right font-bold text-gray-900 border border-gray-300">{row.total_litres.toFixed(2)}</td>
+                  <td className="px-4 py-2.5 text-right text-gray-500 border border-gray-300">{row.total_entries}</td>
+                  <td className="px-3 py-2.5 text-center border border-gray-300">
+                    <button onClick={() => openEditModal(row.cattle_id, row.cattle_name, null)} className="text-blue-600 hover:text-blue-800 text-base">✏️</button>
                   </td>
-                  <td className="border border-gray-300 bg-green-50"></td>
+                </tr>
+              ))}
+              {cattleSummary.length > 0 && (
+                <tr className="bg-green-50 font-bold">
+                  <td className="px-4 py-2.5 border border-gray-300"></td>
+                  <td className="px-4 py-2.5 text-green-900 border border-gray-300" colSpan={2}>Grand Total</td>
+                  <td className="px-4 py-2.5 text-right text-blue-800 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.morning_litres, 0).toFixed(2)}</td>
+                  <td className="px-4 py-2.5 text-right text-orange-800 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.evening_litres, 0).toFixed(2)}</td>
+                  <td className="px-4 py-2.5 text-right text-green-900 border-2 border-green-400">{grandTotal.toFixed(2)} L</td>
+                  <td className="px-4 py-2.5 text-right text-gray-700 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.total_entries, 0)}</td>
+                  <td className="border border-gray-300"></td>
                 </tr>
               )}
             </tbody>
