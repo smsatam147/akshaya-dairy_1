@@ -25,7 +25,7 @@ export default function MilkCollection() {
   const [cattleSummary, setCattleSummary] = useState([]);
   const [grandTotal, setGrandTotal]       = useState(0);
   const [monthlyData, setMonthlyData]     = useState({ months: [], cattle: [] });
-  const [form, setForm] = useState({ cattle_id: '', shift: 'Morning', quantity_litres: '', notes: '' });
+  const [form, setForm] = useState({ cattle_id: '', shift: 'Morning', quantity_litres: '' });
   const [errors, setErrors]         = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [isOnline, setIsOnline]     = useState(navigator.onLine);
@@ -174,20 +174,20 @@ export default function MilkCollection() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    const payload = { cattle: form.cattle_id, collection_date: today, shift: form.shift, quantity_litres: +form.quantity_litres, notes: form.notes };
+    const payload = { cattle: form.cattle_id, collection_date: today, shift: form.shift, quantity_litres: +form.quantity_litres };
     if (!isOnline) {
       const db = await getOfflineDB();
       await db.add(DB_STORE, payload);
       setPendingCount(c => c + 1);
       toast('Entry saved offline. Will sync when connected.', { icon: '📶' });
-      setForm(f => ({ ...f, quantity_litres: '', notes: '' }));
+      setForm(f => ({ ...f, quantity_litres: '' }));
       setSubmitting(false);
       return;
     }
     try {
       await milkAPI.create(payload);
       toast.success('Milk entry recorded!');
-      setForm(f => ({ ...f, quantity_litres: '', notes: '' }));
+      setForm(f => ({ ...f, quantity_litres: '' }));
       refreshAll();
     } catch (err) { toast.error(err.response?.data?.message || 'Failed to record entry.'); }
     finally { setSubmitting(false); }
@@ -224,13 +224,13 @@ export default function MilkCollection() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Entry form */}
-        <div className="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h2 className="font-semibold text-gray-800 mb-4">Record Entry — {selectedDate}</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <h2 className="font-semibold text-gray-800 mb-3">Record Entry — {selectedDate}</h2>
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div>
               <label className="text-sm font-medium text-gray-700">Cattle *</label>
               <select value={form.cattle_id} onChange={e => setForm(f => ({ ...f, cattle_id: e.target.value }))}
-                className={`mt-1 w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 ${errors.cattle_id ? 'border-red-400' : 'border-gray-300'}`}>
+                className={`mt-1 w-full border rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.cattle_id ? 'border-red-400' : 'border-gray-300'}`}>
                 <option value="">Select cattle…</option>
                 {cattle.map(c => <option key={c.id} value={c.id}>{c.tag_number} — {c.name || 'Unnamed'}</option>)}
               </select>
@@ -239,21 +239,16 @@ export default function MilkCollection() {
             <div>
               <label className="text-sm font-medium text-gray-700">Shift *</label>
               <select value={form.shift} onChange={e => setForm(f => ({ ...f, shift: e.target.value }))}
-                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500">
+                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500">
                 <option>Morning</option><option>Evening</option>
               </select>
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Quantity (Litres) *</label>
               <input type="number" step="0.01" value={form.quantity_litres} onChange={e => setForm(f => ({ ...f, quantity_litres: e.target.value }))}
-                className={`mt-1 w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 ${errors.quantity_litres ? 'border-red-400' : 'border-gray-300'}`}
+                className={`mt-1 w-full border rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.quantity_litres ? 'border-red-400' : 'border-gray-300'}`}
                 placeholder="e.g. 12.5" />
               {errors.quantity_litres && <p className="text-red-500 text-xs mt-1">{errors.quantity_litres}</p>}
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Notes</label>
-              <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2}
-                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500" placeholder="Optional notes…" />
             </div>
             <button type="submit" disabled={submitting}
               className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
