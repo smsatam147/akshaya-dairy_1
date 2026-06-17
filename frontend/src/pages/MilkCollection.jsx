@@ -388,7 +388,7 @@ export default function MilkCollection() {
       </div>
 
       {/* TABLE 2: Monthly Breakdown — full width */}
-      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
+      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm" style={{ overflow: 'clip' }}>
             <div className="p-4 border-b-2 border-gray-300">
               <h2 className="font-semibold text-gray-800">📅 Monthly Milk Production per Cattle (Litres)</h2>
               <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
@@ -445,7 +445,7 @@ export default function MilkCollection() {
       </div>
 
       {/* TABLE 3: All-Time Cattle Summary — full width */}
-      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
+      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm" style={{ overflow: 'clip' }}>
         <div className="p-4 border-b-2 border-gray-300 flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-gray-800">🐄 Total Milk per Cattle — All Time</h2>
