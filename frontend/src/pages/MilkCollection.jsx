@@ -332,7 +332,7 @@ export default function MilkCollection() {
                 <div className="p-4 border-b-2 border-gray-300">
                   <h2 className="font-semibold text-gray-800">Entries — {selectedDate}</h2>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto" style={{ overflowY: 'clip' }}>
                   <table className="w-full text-sm border-collapse">
                     <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
                       <tr>
@@ -381,7 +381,7 @@ export default function MilkCollection() {
               <h2 className="font-semibold text-gray-800">📅 Monthly Milk Production per Cattle (Litres)</h2>
               <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" style={{ overflowY: 'clip' }}>
               <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
                 <thead className="text-gray-700 text-xs uppercase">
                   <tr>
@@ -443,7 +443,7 @@ export default function MilkCollection() {
             Grand Total: {grandTotal.toFixed(2)} L
           </span>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" style={{ overflowY: 'clip' }}>
           <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
             <thead className="text-gray-700 text-xs uppercase">
               <tr>
