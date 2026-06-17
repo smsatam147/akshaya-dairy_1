@@ -40,6 +40,7 @@ export const milkAPI = {
   list:           (params)   => api.get('/milk/collections/', { params }),
   create:         (data)     => api.post('/milk/collections/', data),
   update:         (id, data) => api.patch(`/milk/collections/${id}/`, data),
+  delete:         (id)       => api.delete(`/milk/collections/${id}/`),
   syncOffline:    (data)     => api.post('/milk/collections/sync/', data),
   dailySummary:   (date)     => api.get('/milk/summary/daily/', { params: { date } }),
   cattleSummary:  (params)   => api.get('/milk/summary/cattle/', { params }),

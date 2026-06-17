@@ -38,6 +38,10 @@ export default function MilkCollection() {
   const [editVals, setEditVals]     = useState({ quantity_litres: '' });
   const [savingEdit, setSavingEdit] = useState(false);
 
+  // Delete confirmation dialog
+  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null, label: '', source: 'inline' });
+  const [deleting, setDeleting]           = useState(false);
+
   // Modal edit (summary / monthly tables)
   const [editModal, setEditModal] = useState({
     open: false, cattleId: null, cattleName: '', monthFilter: null,
@@ -122,6 +126,27 @@ export default function MilkCollection() {
       }));
       refreshAll();
     } catch (err) { toast.error(err.response?.data?.message || 'Update failed.'); setEditModal(m => ({ ...m, saving: false })); }
+  }
+
+  function askDelete(id, label, source = 'inline') {
+    setDeleteConfirm({ open: true, id, label, source });
+  }
+
+  async function confirmDelete() {
+    setDeleting(true);
+    try {
+      await milkAPI.delete(deleteConfirm.id);
+      toast.success('Entry deleted.');
+      if (deleteConfirm.source === 'modal') {
+        setEditModal(m => ({ ...m, entries: m.entries.filter(e => e.id !== deleteConfirm.id) }));
+      }
+      setDeleteConfirm({ open: false, id: null, label: '', source: 'inline' });
+      refreshAll();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Delete failed.');
+    } finally {
+      setDeleting(false);
+    }
   }
 
   async function handleSync() {
@@ -290,7 +315,7 @@ export default function MilkCollection() {
                     <th className="px-4 py-3 text-left border border-gray-300">Cattle</th>
                     <th className="px-4 py-3 text-left border border-gray-300">Shift</th>
                     <th className="px-4 py-3 text-right border border-gray-300">Qty (L)</th>
-                    <th className="px-4 py-3 text-center border border-gray-300">Edit</th>
+                    <th className="px-4 py-3 text-center border border-gray-300">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -298,6 +323,7 @@ export default function MilkCollection() {
                     <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No entries for this date</td></tr>
                   ) : collections.map((mc, idx) => {
                     const isEdit = editingId === mc.id;
+                    const label = `${mc.cattle_detail?.name || mc.cattle_detail?.tag_number || mc.cattle} — ${mc.shift} ${mc.collection_date}`;
                     return (
                       <tr key={mc.id} className={isEdit ? 'bg-yellow-50' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="px-4 py-2.5 font-medium border border-gray-300">{mc.cattle_detail?.name || mc.cattle_detail?.tag_number || mc.cattle}</td>
@@ -314,7 +340,10 @@ export default function MilkCollection() {
                               <button onClick={() => setEditingId(null)} className="bg-gray-400 text-white text-xs px-2 py-1 rounded hover:bg-gray-500">✕</button>
                             </span>
                           ) : (
-                            <button onClick={() => startEdit(mc)} className="text-blue-600 hover:text-blue-800 text-base" title="Edit entry">✏️</button>
+                            <span className="flex items-center justify-center gap-2">
+                              <button onClick={() => startEdit(mc)} className="text-blue-600 hover:text-blue-800 text-base" title="Edit entry">✏️</button>
+                              <button onClick={() => askDelete(mc.id, label, 'inline')} className="text-red-500 hover:text-red-700 text-base" title="Delete entry">🗑️</button>
+                            </span>
                           )}
                         </td>
                       </tr>
@@ -465,6 +494,40 @@ export default function MilkCollection() {
         </div>
       </div>
 
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirm.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-xl flex-shrink-0">🗑️</div>
+              <div>
+                <h3 className="text-base font-bold text-gray-900">Delete Entry?</h3>
+                <p className="text-xs text-gray-500 mt-0.5">This action cannot be undone.</p>
+              </div>
+            </div>
+            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-5 text-sm text-red-800 font-medium">
+              {deleteConfirm.label}
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirm({ open: false, id: null, label: '', source: 'inline' })}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 disabled:opacity-50"
+              >
+                {deleting ? 'Deleting…' : 'Yes, Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Edit Modal */}
       {editModal.open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -494,6 +557,7 @@ export default function MilkCollection() {
                   <tbody>
                     {editModal.entries.map((mc, idx) => {
                       const isRowEdit = editModal.editingId === mc.id;
+                      const label = `${editModal.cattleName} — ${mc.shift} ${mc.collection_date}`;
                       return (
                         <tr key={mc.id} className={isRowEdit ? 'bg-yellow-50' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                           <td className="px-3 py-2 border border-gray-300 font-medium whitespace-nowrap">{mc.collection_date}</td>
@@ -510,7 +574,10 @@ export default function MilkCollection() {
                                 <button onClick={() => setEditModal(m => ({ ...m, editingId: null }))} className="bg-gray-400 text-white text-xs px-2 py-1 rounded hover:bg-gray-500">✕</button>
                               </span>
                             ) : (
-                              <button onClick={() => startModalEdit(mc)} className="text-blue-600 hover:text-blue-800 text-base">✏️</button>
+                              <span className="flex items-center justify-center gap-2">
+                                <button onClick={() => startModalEdit(mc)} className="text-blue-600 hover:text-blue-800 text-base" title="Edit">✏️</button>
+                                <button onClick={() => askDelete(mc.id, label, 'modal')} className="text-red-500 hover:text-red-700 text-base" title="Delete">🗑️</button>
+                              </span>
                             )}
                           </td>
                         </tr>
