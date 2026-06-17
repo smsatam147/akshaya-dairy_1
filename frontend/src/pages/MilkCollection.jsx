@@ -385,12 +385,12 @@ export default function MilkCollection() {
               <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
                 <thead className="text-gray-700 text-xs uppercase">
                   <tr>
-                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-30 whitespace-nowrap" style={{ top: '69px' }}>Cattle</th>
+                    <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 left-0 bg-gray-100 z-30 whitespace-nowrap">Cattle</th>
                     {monthlyData.months.map(m => (
-                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap sticky bg-gray-100 z-20" style={{ top: '69px' }}>{m}</th>
+                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap sticky top-0 bg-gray-100 z-20">{m}</th>
                     ))}
-                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap sticky z-20" style={{ top: '69px' }}>Total</th>
-                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap sticky z-20" style={{ top: '69px' }}>Edit</th>
+                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap sticky top-0 z-20">Total</th>
+                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap sticky top-0 z-20">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -447,14 +447,14 @@ export default function MilkCollection() {
           <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
             <thead className="text-gray-700 text-xs uppercase">
               <tr>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>#</th>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Cattle Name</th>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Tag</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Morning (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Evening (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Total (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Entries</th>
-                <th className="px-4 py-3 text-center border border-gray-300 sticky bg-gray-100 z-10" style={{ top: '69px' }}>Edit</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 bg-gray-100 z-10">#</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 bg-gray-100 z-10">Cattle Name</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 bg-gray-100 z-10">Tag</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Morning (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Evening (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Total (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Entries</th>
+                <th className="px-4 py-3 text-center border border-gray-300 sticky top-0 bg-gray-100 z-10">Edit</th>
               </tr>
             </thead>
             <tbody>
