@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.db.models import Sum, Avg, Count
 from django.db import IntegrityError
 from rest_framework import generics, status
+from rest_framework.exceptions import PermissionDenied as DRFPermissionDenied
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -19,8 +20,8 @@ logger = logging.getLogger('dairypro')
 DEVIATION_THRESHOLD = Decimal('20.0')  # FR-M-04: alert if >20% drop vs 7-day avg
 
 
-class MilkCollectionDetailView(generics.RetrieveUpdateAPIView):
-    """GET/PATCH /api/v1/milk/collections/<pk>/ — Retrieve or update a single entry."""
+class MilkCollectionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET/PATCH/DELETE /api/v1/milk/collections/<pk>/ — Retrieve, update, or delete an entry."""
     serializer_class   = MilkCollectionSerializer
     permission_classes = [IsAuthenticated]
     queryset           = MilkCollection.objects.select_related('cattle', 'field_worker')
@@ -33,6 +34,23 @@ class MilkCollectionDetailView(generics.RetrieveUpdateAPIView):
                                     'fat': str(mc.fat_percentage),
                                     'snf': str(mc.snf_percentage)},
                         request=self.request)
+
+    def perform_destroy(self, instance):
+        from dairypro.core.models import Role
+        user = self.request.user
+        # Only farm managers and above can delete; field workers cannot delete entries
+        if user.role == Role.FIELD_WORKER:
+            raise DRFPermissionDenied('Field workers cannot delete milk entries.')
+        write_audit_log(user, 'DELETE', 'milk_collection',
+                        resource_id=instance.id,
+                        old_values={
+                            'cattle': str(instance.cattle_id),
+                            'date': str(instance.collection_date),
+                            'shift': instance.shift,
+                            'qty': str(instance.quantity_litres),
+                        },
+                        request=self.request)
+        instance.delete()
 
 
 class MilkCollectionListCreateView(generics.ListCreateAPIView):
