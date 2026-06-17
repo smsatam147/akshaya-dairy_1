@@ -289,78 +289,93 @@ export default function MilkCollection() {
             </div>
           )}
 
-          {/* TABLE 1: Daily Entries */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
-            <div className="p-4 border-b-2 border-gray-300">
-              <h2 className="font-semibold text-gray-800">Entries — {selectedDate}</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm border-collapse">
-                <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
-                  <tr>
-                    <th className="px-4 py-3 text-left border border-gray-300">Cattle</th>
-                    <th className="px-4 py-3 text-left border border-gray-300">Shift</th>
-                    <th className="px-4 py-3 text-right border border-gray-300">Qty (L)</th>
-                    <th className="px-4 py-3 text-center border border-gray-300">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {collections.length === 0 ? (
-                    <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No entries for this date</td></tr>
-                  ) : collections.map((mc, idx) => {
-                    const isEdit = editingId === mc.id;
-                    const label = `${mc.cattle_detail?.name || mc.cattle_detail?.tag_number || mc.cattle} — ${mc.shift} ${mc.collection_date}`;
-                    return (
-                      <tr key={mc.id} className={isEdit ? 'bg-yellow-50' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        <td className="px-4 py-2.5 font-medium border border-gray-300">{mc.cattle_detail?.name || mc.cattle_detail?.tag_number || mc.cattle}</td>
-                        <td className="px-4 py-2.5 text-gray-600 border border-gray-300">{mc.shift}</td>
-                        <td className="px-2 py-1.5 text-right border border-gray-300">
-                          {isEdit
-                            ? <input type="number" step="0.01" min="0" value={editVals.quantity_litres} onChange={e => setEditVals(v => ({ ...v, quantity_litres: e.target.value }))} className="w-24 border border-blue-400 rounded px-2 py-1 text-sm text-right" />
-                            : Number(mc.quantity_litres).toFixed(2)}
-                        </td>
-                        <td className="px-3 py-2 text-center border border-gray-300 whitespace-nowrap">
-                          {isEdit ? (
-                            <span className="flex items-center justify-center gap-1">
-                              <button onClick={() => saveEdit(mc.id)} disabled={savingEdit} className="bg-green-600 text-white text-xs px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50">{savingEdit ? '…' : '✓ Save'}</button>
-                              <button onClick={() => setEditingId(null)} className="bg-gray-400 text-white text-xs px-2 py-1 rounded hover:bg-gray-500">✕</button>
-                            </span>
-                          ) : (
-                            <span className="flex items-center justify-center gap-2">
-                              <button onClick={() => startEdit(mc)} className="text-blue-600 hover:text-blue-800 text-base" title="Edit entry">✏️</button>
-                              <button onClick={() => askDelete(mc.id, label, 'inline')} className="text-red-500 hover:text-red-700 text-base" title="Delete entry">🗑️</button>
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  {collections.length > 0 && (
-                    <>
-                      <tr className="bg-blue-50">
-                        <td className="px-4 py-2.5 font-semibold text-blue-800 border-2 border-blue-300">Total Morning</td>
-                        <td className="px-4 py-2.5 text-blue-700 border-2 border-blue-300">Morning</td>
-                        <td className="px-4 py-2.5 text-right font-bold text-blue-800 border-2 border-blue-300">{morningTotal.toFixed(2)}</td>
-                        <td className="border-2 border-blue-300"></td>
-                      </tr>
-                      <tr className="bg-orange-50">
-                        <td className="px-4 py-2.5 font-semibold text-orange-800 border-2 border-orange-300">Total Evening</td>
-                        <td className="px-4 py-2.5 text-orange-700 border-2 border-orange-300">Evening</td>
-                        <td className="px-4 py-2.5 text-right font-bold text-orange-800 border-2 border-orange-300">{eveningTotal.toFixed(2)}</td>
-                        <td className="border-2 border-orange-300"></td>
-                      </tr>
-                      <tr className="bg-green-50">
-                        <td className="px-4 py-2.5 font-bold text-green-900 border-2 border-green-400">Total Full Day</td>
-                        <td className="px-4 py-2.5 text-green-700 border-2 border-green-400">Morning + Evening</td>
-                        <td className="px-4 py-2.5 text-right font-bold text-green-900 border-2 border-green-400">{fullDayTotal.toFixed(2)} L</td>
-                        <td className="border-2 border-green-400"></td>
-                      </tr>
-                    </>
+          {/* TABLE 1: Daily Entries — grouped by cattle, Morning/Evening as columns */}
+          {(() => {
+            // Build one row per cattle: { name, morning: mc|null, evening: mc|null }
+            const cattleMap = {};
+            collections.forEach(mc => {
+              const key = mc.cattle_detail?.name || mc.cattle_detail?.tag_number || String(mc.cattle);
+              if (!cattleMap[key]) cattleMap[key] = { name: key, morning: null, evening: null };
+              if (mc.shift === 'Morning') cattleMap[key].morning = mc;
+              else cattleMap[key].evening = mc;
+            });
+            const cattleRows = Object.values(cattleMap);
+
+            const ShiftCell = ({ mc, shift }) => {
+              if (!mc) return <td className="px-3 py-2.5 text-center text-gray-300 border border-gray-300">—</td>;
+              const isEdit = editingId === mc.id;
+              const label = `${mc.cattle_detail?.name || mc.cattle_detail?.tag_number || mc.cattle} — ${shift} ${mc.collection_date}`;
+              return (
+                <td className={`px-3 py-2 border border-gray-300 ${isEdit ? 'bg-yellow-50' : ''}`}>
+                  {isEdit ? (
+                    <div className="flex items-center gap-1 justify-end">
+                      <input type="number" step="0.01" min="0" value={editVals.quantity_litres}
+                        onChange={e => setEditVals(v => ({ ...v, quantity_litres: e.target.value }))}
+                        className="w-20 border border-blue-400 rounded px-2 py-1 text-sm text-right" />
+                      <button onClick={() => saveEdit(mc.id)} disabled={savingEdit}
+                        className="bg-green-600 text-white text-xs px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50">
+                        {savingEdit ? '…' : '✓'}
+                      </button>
+                      <button onClick={() => setEditingId(null)}
+                        className="bg-gray-400 text-white text-xs px-2 py-1 rounded hover:bg-gray-500">✕</button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-medium text-gray-800">{Number(mc.quantity_litres).toFixed(2)}</span>
+                      <span className="flex items-center gap-1 flex-shrink-0">
+                        <button onClick={() => startEdit(mc)} className="text-blue-500 hover:text-blue-700 text-sm" title="Edit">✏️</button>
+                        <button onClick={() => askDelete(mc.id, label, 'inline')} className="text-red-400 hover:text-red-600 text-sm" title="Delete">🗑️</button>
+                      </span>
+                    </div>
                   )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                </td>
+              );
+            };
+
+            return (
+              <div className="bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
+                <div className="p-4 border-b-2 border-gray-300">
+                  <h2 className="font-semibold text-gray-800">Entries — {selectedDate}</h2>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse">
+                    <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
+                      <tr>
+                        <th className="px-4 py-3 text-left border border-gray-300">Cattle</th>
+                        <th className="px-4 py-3 text-right border border-gray-300 bg-blue-50 text-blue-700">☀️ Morning (L)</th>
+                        <th className="px-4 py-3 text-right border border-gray-300 bg-orange-50 text-orange-700">🌙 Evening (L)</th>
+                        <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200">Total (L)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cattleRows.length === 0 ? (
+                        <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No entries for this date</td></tr>
+                      ) : cattleRows.map((row, idx) => {
+                        const rowTotal = (row.morning ? Number(row.morning.quantity_litres) : 0)
+                                       + (row.evening ? Number(row.evening.quantity_litres) : 0);
+                        return (
+                          <tr key={row.name} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2.5 font-medium text-gray-900 border border-gray-300">{row.name}</td>
+                            <ShiftCell mc={row.morning} shift="Morning" />
+                            <ShiftCell mc={row.evening} shift="Evening" />
+                            <td className="px-4 py-2.5 text-right font-bold text-gray-900 border-2 border-gray-400 bg-gray-50">{rowTotal.toFixed(2)}</td>
+                          </tr>
+                        );
+                      })}
+                      {cattleRows.length > 0 && (
+                        <tr className="bg-green-50 font-bold">
+                          <td className="px-4 py-2.5 text-green-900 border-2 border-green-400">Daily Total</td>
+                          <td className="px-4 py-2.5 text-right text-blue-800 border-2 border-blue-300 bg-blue-50">{morningTotal.toFixed(2)}</td>
+                          <td className="px-4 py-2.5 text-right text-orange-800 border-2 border-orange-300 bg-orange-50">{eveningTotal.toFixed(2)}</td>
+                          <td className="px-4 py-2.5 text-right text-green-900 border-2 border-green-400 bg-green-100">{fullDayTotal.toFixed(2)} L</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* TABLE 2: All-Time Cattle Summary */}
           <div className="bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
