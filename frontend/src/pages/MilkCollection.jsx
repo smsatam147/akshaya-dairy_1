@@ -38,9 +38,9 @@ export default function MilkCollection() {
   useEffect(() => {
     const measure = () => {
       const nav = document.querySelector('header');
-      if (nav) setNavH(nav.getBoundingClientRect().height);
+      if (nav) setNavH(nav.offsetHeight);
     };
-    measure();
+    requestAnimationFrame(measure);
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
   }, []);
@@ -394,15 +394,15 @@ export default function MilkCollection() {
               <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
+              <table className="w-full text-sm border-collapse">
                 <thead className="text-gray-700 text-xs uppercase">
                   <tr>
-                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-30 whitespace-nowrap" style={{ top: navH }}>Cattle</th>
+                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-[3] whitespace-nowrap" style={{ top: navH }}>Cattle</th>
                     {monthlyData.months.map(m => (
-                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap sticky bg-gray-100 z-20" style={{ top: navH }}>{m}</th>
+                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap sticky bg-gray-100 z-[2]" style={{ top: navH }}>{m}</th>
                     ))}
-                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap sticky z-20" style={{ top: navH }}>Total</th>
-                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap sticky z-20" style={{ top: navH }}>Edit</th>
+                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap sticky z-[2]" style={{ top: navH }}>Total</th>
+                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap sticky z-[2]" style={{ top: navH }}>Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -456,17 +456,17 @@ export default function MilkCollection() {
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
+          <table className="w-full text-sm border-collapse">
             <thead className="text-gray-700 text-xs uppercase">
               <tr>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>#</th>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Cattle Name</th>
-                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Tag</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Morning (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Evening (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Total (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Entries</th>
-                <th className="px-4 py-3 text-center border border-gray-300 sticky bg-gray-100 z-10" style={{ top: navH }}>Edit</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>#</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Cattle Name</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Tag</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Morning (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Evening (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Total (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Entries</th>
+                <th className="px-4 py-3 text-center border border-gray-300 sticky bg-gray-100 z-[2]" style={{ top: navH }}>Edit</th>
               </tr>
             </thead>
             <tbody>
