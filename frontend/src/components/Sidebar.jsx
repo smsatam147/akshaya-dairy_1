@@ -46,7 +46,7 @@ export default function Sidebar() {
   return (
     <aside
       className="flex flex-col h-screen w-64 fixed left-0 top-0 z-10 shadow-2xl"
-      style={{ background: '#BEA895' }}
+      style={{ background: '#E8D5B0' }}
     >
       {/* Brand */}
       <div className="px-5 py-5" style={{ borderBottom: '1px solid rgba(180,140,90,0.25)' }}>
