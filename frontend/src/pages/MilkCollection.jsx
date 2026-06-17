@@ -382,15 +382,15 @@ export default function MilkCollection() {
               <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm border-collapse">
-                <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
+              <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
+                <thead className="text-gray-700 text-xs uppercase">
                   <tr>
-                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-10 whitespace-nowrap">Cattle</th>
+                    <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 left-0 bg-gray-100 z-30 whitespace-nowrap">Cattle</th>
                     {monthlyData.months.map(m => (
-                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap">{m}</th>
+                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap sticky top-0 bg-gray-100 z-20">{m}</th>
                     ))}
-                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap">Total</th>
-                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap">Edit</th>
+                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap sticky top-0 z-20">Total</th>
+                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap sticky top-0 z-20">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -444,17 +444,17 @@ export default function MilkCollection() {
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
+          <table className="w-full text-sm border-separate" style={{ borderSpacing: 0 }}>
+            <thead className="text-gray-700 text-xs uppercase">
               <tr>
-                <th className="px-4 py-3 text-left border border-gray-300">#</th>
-                <th className="px-4 py-3 text-left border border-gray-300">Cattle Name</th>
-                <th className="px-4 py-3 text-left border border-gray-300">Tag</th>
-                <th className="px-4 py-3 text-right border border-gray-300">Morning (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300">Evening (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300">Total (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300">Entries</th>
-                <th className="px-4 py-3 text-center border border-gray-300">Edit</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 bg-gray-100 z-10">#</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 bg-gray-100 z-10">Cattle Name</th>
+                <th className="px-4 py-3 text-left border border-gray-300 sticky top-0 bg-gray-100 z-10">Tag</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Morning (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Evening (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Total (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 sticky top-0 bg-gray-100 z-10">Entries</th>
+                <th className="px-4 py-3 text-center border border-gray-300 sticky top-0 bg-gray-100 z-10">Edit</th>
               </tr>
             </thead>
             <tbody>
