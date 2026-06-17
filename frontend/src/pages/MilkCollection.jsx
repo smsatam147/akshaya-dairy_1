@@ -25,7 +25,7 @@ export default function MilkCollection() {
   const [cattleSummary, setCattleSummary] = useState([]);
   const [grandTotal, setGrandTotal]       = useState(0);
   const [monthlyData, setMonthlyData]     = useState({ months: [], cattle: [] });
-  const [form, setForm] = useState({ cattle_id: '', shift: 'Morning', quantity_litres: '', fat_percentage: '', snf_percentage: '', notes: '' });
+  const [form, setForm] = useState({ cattle_id: '', shift: 'Morning', quantity_litres: '', notes: '' });
   const [errors, setErrors]         = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [isOnline, setIsOnline]     = useState(navigator.onLine);
@@ -166,7 +166,6 @@ export default function MilkCollection() {
     const e = {};
     if (!form.cattle_id) e.cattle_id = 'Select a cattle.';
     if (!form.quantity_litres || isNaN(form.quantity_litres) || +form.quantity_litres <= 0) e.quantity_litres = 'Enter a valid quantity (> 0).';
-    if (form.fat_percentage && (+form.fat_percentage < 0 || +form.fat_percentage > 10)) e.fat_percentage = 'Fat% must be 0-10.';
     setErrors(e);
     return !Object.keys(e).length;
   };
@@ -175,20 +174,20 @@ export default function MilkCollection() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    const payload = { cattle: form.cattle_id, collection_date: today, shift: form.shift, quantity_litres: +form.quantity_litres, fat_percentage: form.fat_percentage || null, snf_percentage: form.snf_percentage || null, notes: form.notes };
+    const payload = { cattle: form.cattle_id, collection_date: today, shift: form.shift, quantity_litres: +form.quantity_litres, notes: form.notes };
     if (!isOnline) {
       const db = await getOfflineDB();
       await db.add(DB_STORE, payload);
       setPendingCount(c => c + 1);
       toast('Entry saved offline. Will sync when connected.', { icon: '📶' });
-      setForm(f => ({ ...f, quantity_litres: '', fat_percentage: '', snf_percentage: '', notes: '' }));
+      setForm(f => ({ ...f, quantity_litres: '', notes: '' }));
       setSubmitting(false);
       return;
     }
     try {
       await milkAPI.create(payload);
       toast.success('Milk entry recorded!');
-      setForm(f => ({ ...f, quantity_litres: '', fat_percentage: '', snf_percentage: '', notes: '' }));
+      setForm(f => ({ ...f, quantity_litres: '', notes: '' }));
       refreshAll();
     } catch (err) { toast.error(err.response?.data?.message || 'Failed to record entry.'); }
     finally { setSubmitting(false); }
@@ -250,19 +249,6 @@ export default function MilkCollection() {
                 className={`mt-1 w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 ${errors.quantity_litres ? 'border-red-400' : 'border-gray-300'}`}
                 placeholder="e.g. 12.5" />
               {errors.quantity_litres && <p className="text-red-500 text-xs mt-1">{errors.quantity_litres}</p>}
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-sm font-medium text-gray-700">Fat %</label>
-                <input type="number" step="0.01" value={form.fat_percentage} onChange={e => setForm(f => ({ ...f, fat_percentage: e.target.value }))}
-                  className={`mt-1 w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 ${errors.fat_percentage ? 'border-red-400' : 'border-gray-300'}`}
-                  placeholder="e.g. 4.2" />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">SNF %</label>
-                <input type="number" step="0.01" value={form.snf_percentage} onChange={e => setForm(f => ({ ...f, snf_percentage: e.target.value }))}
-                  className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500" placeholder="e.g. 8.5" />
-              </div>
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Notes</label>
