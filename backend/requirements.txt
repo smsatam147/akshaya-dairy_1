@@ -16,5 +16,5 @@ gunicorn==21.2.0
 whitenoise==6.6.0
 
 # PostgreSQL (used on Render; ignored if USE_SQLITE=True locally)
-psycopg[binary]==3.1.19
+psycopg[binary]>=3.2.10
 dj-database-url==2.1.0
