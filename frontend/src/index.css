@@ -34,3 +34,31 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .table-spotlight:hover { animation: none; box-shadow: 0 8px 26px rgba(0, 0, 0, 0.10); }
 }
+
+/* ── Main window scrollbar ─ thicker + cream-toned to match the UI ─────
+   Thumb uses #F0E6D0 (the sidebar cream); track is a lighter warm tint so the
+   thumb stays visible. Far-right page scrollbar + inner scroll areas. */
+html {
+  scrollbar-width: auto;
+  scrollbar-color: #F0E6D0 #FBF7F0;
+}
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #FBF7F0;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb {
+  background: #F0E6D0;
+  border: 3px solid #FBF7F0;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E8D5B0;
+}
+::-webkit-scrollbar-corner {
+  background: #FBF7F0;
+}
