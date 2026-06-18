@@ -1,7 +1,7 @@
 /**
  * pages/MilkCollection.jsx — Milk entry form + daily summary + offline sync.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { milkAPI, cattleAPI } from '../api/endpoints';
 import toast from 'react-hot-toast';
 import Badge from '../components/Badge';
@@ -32,6 +32,17 @@ export default function MilkCollection() {
   const [pendingCount, setPendingCount] = useState(0);
   const today = new Date().toISOString().slice(0, 10);
   const [selectedDate, setSelectedDate] = useState(today);
+
+  // Click-to-center + hover spotlight for the Monthly & All-Time tables
+  const [centeredTable, setCenteredTable] = useState(null);
+  const monthlyRef = useRef(null);
+  const allTimeRef = useRef(null);
+  const focusTable = (e, id, ref) => {
+    // Ignore clicks on the edit/delete controls (and any interactive element)
+    if (e.target.closest('button, a, input, select, [role="button"]')) return;
+    setCenteredTable(id);
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
 
   // Inline-edit (daily table)
@@ -377,7 +388,10 @@ export default function MilkCollection() {
       </div>
 
       {/* TABLE 2: Monthly Breakdown — full width */}
-      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
+      <div ref={monthlyRef}
+           onClick={(e) => focusTable(e, 'monthly', monthlyRef)}
+           onMouseLeave={() => setCenteredTable(c => (c === 'monthly' ? null : c))}
+           className={`mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden table-spotlight ${centeredTable === 'monthly' ? 'is-centered' : ''}`}>
             <div className="p-4 border-b-2 border-gray-300">
               <h2 className="font-semibold text-gray-800">📅 Monthly Milk Production per Cattle (Litres)</h2>
               <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
@@ -434,7 +448,10 @@ export default function MilkCollection() {
       </div>
 
       {/* TABLE 3: All-Time Cattle Summary — full width */}
-      <div className="mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden">
+      <div ref={allTimeRef}
+           onClick={(e) => focusTable(e, 'alltime', allTimeRef)}
+           onMouseLeave={() => setCenteredTable(c => (c === 'alltime' ? null : c))}
+           className={`mt-6 bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden table-spotlight ${centeredTable === 'alltime' ? 'is-centered' : ''}`}>
         <div className="p-4 border-b-2 border-gray-300 flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-gray-800">🐄 Total Milk per Cattle — All Time</h2>
