@@ -34,21 +34,3 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .table-spotlight:hover { animation: none; box-shadow: 0 8px 26px rgba(0, 0, 0, 0.10); }
 }
-
-/* ── Scrollbars ─ default colors; far-right main scrollbar ~1.5x thicker ─────
-   Inner scroll areas keep the browser default. Only the page (html) scrollbar
-   is widened (16px -> 24px) with neutral default-style colors. */
-html::-webkit-scrollbar {
-  width: 24px;
-  height: 24px;
-}
-html::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-html::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 8px;
-}
-html::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
