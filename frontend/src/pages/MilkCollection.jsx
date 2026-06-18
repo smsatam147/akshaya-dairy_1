@@ -382,16 +382,16 @@ export default function MilkCollection() {
               <h2 className="font-semibold text-gray-800">📅 Monthly Milk Production per Cattle (Litres)</h2>
               <p className="text-xs text-gray-400 mt-0.5">June 2025 onwards — click ✏️ to edit a cattle's entries</p>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-auto" style={{ maxHeight: '70vh' }}>
               <table className="w-full text-sm border-collapse">
                 <thead className="text-gray-700 text-xs uppercase">
                   <tr>
-                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 bg-gray-100 z-[1] whitespace-nowrap">Cattle</th>
+                    <th className="px-4 py-3 text-left border border-gray-300 sticky left-0 top-0 bg-gray-100 z-[6] whitespace-nowrap shadow-[inset_0_-1px_0_#d1d5db]">Cattle</th>
                     {monthlyData.months.map(m => (
-                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap bg-gray-100">{m}</th>
+                      <th key={m} className="px-3 py-3 text-right border border-gray-300 whitespace-nowrap bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">{m}</th>
                     ))}
-                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap">Total</th>
-                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap">Edit</th>
+                    <th className="px-4 py-3 text-right border-2 border-gray-400 bg-gray-200 whitespace-nowrap sticky top-0 z-[5] shadow-[inset_0_-1px_0_#9ca3af]">Total</th>
+                    <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 whitespace-nowrap sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -444,18 +444,18 @@ export default function MilkCollection() {
             Grand Total: {grandTotal.toFixed(2)} L
           </span>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-auto" style={{ maxHeight: '70vh' }}>
           <table className="w-full text-sm border-collapse">
             <thead className="text-gray-700 text-xs uppercase">
               <tr>
-                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100">#</th>
-                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100">Cattle Name</th>
-                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100">Tag</th>
-                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100">Morning (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100">Evening (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100">Total (L)</th>
-                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100">Entries</th>
-                <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100">Edit</th>
+                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">#</th>
+                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Cattle Name</th>
+                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Tag</th>
+                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Morning (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Evening (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Total (L)</th>
+                <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Entries</th>
+                <th className="px-4 py-3 text-center border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Edit</th>
               </tr>
             </thead>
             <tbody>
