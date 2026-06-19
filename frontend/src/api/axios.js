@@ -23,7 +23,7 @@ const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,  // send httpOnly refresh cookie
   headers: { 'Content-Type': 'application/json' },
-  timeout: 10000,
+  timeout: 60000,
 });
 
 // Request interceptor — attach Bearer token

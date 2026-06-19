@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
       setUser(userData);
       return { success: true };
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed.';
+      const msg = err.response?.data?.message || ((err.code === 'ECONNABORTED' || !err.response) ? 'Could not reach the server \u2014 it may be waking up. Please wait a few seconds and try again.' : 'Login failed.');
       return { success: false, message: msg };
     } finally {
       setLoading(false);
