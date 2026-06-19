@@ -6,12 +6,12 @@ import { useAuth } from '../context/AuthContext';
 
 const NAV_ITEMS = [
   { path: '/',          label: 'Dashboard',         icon: '&#x1F4CA;', roles: ['super_admin','farm_manager','accountant','field_worker','vet','viewer'] },
-  { path: '/milk',      label: 'Milk Entry',        icon: '&#x1F95B;', roles: ['super_admin','farm_manager','field_worker'] },
-  { path: '/cattle',    label: 'Cattle Health',     icon: '&#x1F404;', roles: ['super_admin','farm_manager','vet'] },
-  { path: '/inventory', label: 'Inventory',         icon: '&#x1F4E6;', roles: ['super_admin','farm_manager'] },
-  { path: '/sales',     label: 'Sales',             icon: '&#x1F4B0;', roles: ['super_admin','accountant','farm_manager'] },
-  { path: '/employees', label: 'Employee Roster',   icon: '&#x1F465;', roles: ['super_admin','accountant'] },
-  { path: '/reports',   label: 'Financial Reports', icon: '&#x1F4C8;', roles: ['super_admin','accountant'] },
+  { path: '/milk',      label: 'Milk Entry',        icon: '&#x1F95B;', roles: ['super_admin','farm_manager','field_worker','viewer'] },
+  { path: '/cattle',    label: 'Cattle Health',     icon: '&#x1F404;', roles: ['super_admin','farm_manager','vet','viewer'] },
+  { path: '/inventory', label: 'Inventory',         icon: '&#x1F4E6;', roles: ['super_admin','farm_manager','viewer'] },
+  { path: '/sales',     label: 'Sales',             icon: '&#x1F4B0;', roles: ['super_admin','accountant','farm_manager','viewer'] },
+  { path: '/employees', label: 'Employee Roster',   icon: '&#x1F465;', roles: ['super_admin','accountant','viewer'] },
+  { path: '/reports',   label: 'Financial Reports', icon: '&#x1F4C8;', roles: ['super_admin','accountant','viewer'] },
 ];
 
 const ROLE_LABELS = {
