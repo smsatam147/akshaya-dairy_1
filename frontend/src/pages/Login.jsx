@@ -43,7 +43,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10"
-         style={{ background: 'linear-gradient(160deg, #EFF4E9 0%, #FAFBF7 52%, #F4F1E8 100%)' }}>
+         style={{ background: 'linear-gradient(rgba(18,38,18,0.55), rgba(18,38,18,0.45)), url(' + (process.env.PUBLIC_URL || '') + '/farm-bg.jpg) center/cover no-repeat' }}>
 
       <div className="w-full max-w-sm flex flex-col items-center">
 
@@ -52,11 +52,11 @@ export default function Login() {
           src={(process.env.PUBLIC_URL || '') + '/akshaya-logo.png'}
           alt="Akshaya Farms"
           className="w-36 h-auto mb-4"
-          style={{ filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.10))' }}
+          style={{ filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.5))' }}
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
         <p className="text-xs font-semibold uppercase mb-8"
-           style={{ color: GREEN_DARK, letterSpacing: '0.22em' }}>
+           style={{ color: '#FFFFFF', letterSpacing: '0.22em', textShadow: '0 1px 10px rgba(0,0,0,0.45)' }}>
           Dairy Management System
         </p>
 
@@ -140,7 +140,7 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="text-center text-xs mt-5 leading-relaxed" style={{ color: '#9AA295' }}>
+        <p className="text-center text-xs mt-5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>
           Account locked after 5 failed attempts. Contact your Super Admin to unlock.
         </p>
       </div>
