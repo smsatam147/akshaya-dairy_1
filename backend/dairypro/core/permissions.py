@@ -1,17 +1,15 @@
 """
 core/permissions.py — Role-Based Access Control
 DRF permission classes enforcing the RBAC matrix (SAD Section 3.3).
+
+The VIEWER role is a read-only "guest": it may perform safe (read) requests on
+the role-gated endpoints below, but never write. Other roles are unchanged.
 """
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 from .models import Role
 
 
 class IsRoleAllowed(BasePermission):
-    """
-    Usage:
-        permission_classes = [IsAuthenticated, IsRoleAllowed]
-        allowed_roles = [Role.FARM_MANAGER, Role.SUPER_ADMIN]
-    """
     allowed_roles = []
 
     def has_permission(self, request, view):
@@ -29,23 +27,47 @@ class IsSuperAdmin(BasePermission):
 
 class IsFarmManagerOrAbove(BasePermission):
     ALLOWED = [Role.SUPER_ADMIN, Role.FARM_MANAGER]
+
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated
-                and request.user.role in self.ALLOWED)
+        if not (request.user and request.user.is_authenticated):
+            return False
+        if request.user.role == Role.VIEWER:
+            return request.method in SAFE_METHODS
+        return request.user.role in self.ALLOWED
 
 
 class IsAccountantOrAbove(BasePermission):
     ALLOWED = [Role.SUPER_ADMIN, Role.FARM_MANAGER, Role.ACCOUNTANT]
+
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated
-                and request.user.role in self.ALLOWED)
+        if not (request.user and request.user.is_authenticated):
+            return False
+        if request.user.role == Role.VIEWER:
+            return request.method in SAFE_METHODS
+        return request.user.role in self.ALLOWED
 
 
 class IsVetOrFarmManager(BasePermission):
     ALLOWED = [Role.SUPER_ADMIN, Role.FARM_MANAGER, Role.VET]
+
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated
-                and request.user.role in self.ALLOWED)
+        if not (request.user and request.user.is_authenticated):
+            return False
+        if request.user.role == Role.VIEWER:
+            return request.method in SAFE_METHODS
+        return request.user.role in self.ALLOWED
+
+
+class ReadOnlyForViewer(BasePermission):
+    """Viewer = read-only (safe methods only); every other authenticated user is
+    unaffected. Use on endpoints otherwise open to all authenticated users
+    (e.g. milk) so the guest can read but not write."""
+    def has_permission(self, request, view):
+        if not (request.user and request.user.is_authenticated):
+            return False
+        if request.user.role == Role.VIEWER:
+            return request.method in SAFE_METHODS
+        return True
 
 
 class IsAnyAuthenticated(BasePermission):

@@ -17,3 +17,15 @@ if not User.objects.filter(email='admin@dairypro.com').exists():
     print('SUCCESS: Admin user created.')
 else:
     print('INFO: Admin user already exists.')
+
+# Guest read-only user (viewer role)
+if not User.objects.filter(email='guest@dairypro.com').exists():
+    User.objects.create_user(
+        email='guest@dairypro.com',
+        password='Guest@123',
+        full_name='Guest (Read-Only)',
+        role='viewer',
+    )
+    print('SUCCESS: Guest user created.')
+else:
+    print('INFO: Guest user already exists.')

@@ -14,6 +14,11 @@ export const setAccessToken = (token) => { accessToken = token; };
 export const getAccessToken = () => accessToken;
 export const clearAccessToken = () => { accessToken = null; };
 
+// Read-only guest flag - blocks data-mutating requests for the viewer role
+let readOnly = false;
+export const setReadOnly = (v) => { readOnly = v; };
+export const getReadOnly = () => readOnly;
+
 const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,  // send httpOnly refresh cookie
@@ -24,6 +29,17 @@ const api = axios.create({
 // Request interceptor — attach Bearer token
 api.interceptors.request.use(
   (config) => {
+    const _m = (config.method || 'get').toLowerCase();
+    const _u = config.url || '';
+    const _isWrite = !['get', 'head', 'options'].includes(_m);
+    const _isAuthAction = _u.indexOf('/auth/login') !== -1 || _u.indexOf('/auth/logout') !== -1;
+    if (readOnly && _isWrite && !_isAuthAction) {
+      return Promise.reject({
+        config,
+        response: { status: 403, data: { message: 'Not authorized: this is a read-only guest account.' } },
+        isReadOnlyBlock: true,
+      });
+    }
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }

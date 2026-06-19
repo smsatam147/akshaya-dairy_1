@@ -54,32 +54,32 @@ function AppRoutes() {
 
       <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/milk" element={
-        <RoleRoute roles={['super_admin','farm_manager','field_worker']}>
+        <RoleRoute roles={['super_admin','farm_manager','field_worker','viewer']}>
           <MilkCollection />
         </RoleRoute>
       } />
       <Route path="/cattle" element={
-        <RoleRoute roles={['super_admin','farm_manager','vet']}>
+        <RoleRoute roles={['super_admin','farm_manager','vet','viewer']}>
           <CattleHealth />
         </RoleRoute>
       } />
       <Route path="/inventory" element={
-        <RoleRoute roles={['super_admin','farm_manager']}>
+        <RoleRoute roles={['super_admin','farm_manager','viewer']}>
           <Inventory />
         </RoleRoute>
       } />
       <Route path="/sales" element={
-        <RoleRoute roles={['super_admin','accountant']}>
+        <RoleRoute roles={['super_admin','accountant','viewer']}>
           <Sales />
         </RoleRoute>
       } />
       <Route path="/employees" element={
-        <RoleRoute roles={['super_admin','accountant']}>
+        <RoleRoute roles={['super_admin','accountant','viewer']}>
           <EmployeeRoster />
         </RoleRoute>
       } />
       <Route path="/reports" element={
-        <RoleRoute roles={['super_admin','accountant']}>
+        <RoleRoute roles={['super_admin','accountant','viewer']}>
           <FinancialReports />
         </RoleRoute>
       } />

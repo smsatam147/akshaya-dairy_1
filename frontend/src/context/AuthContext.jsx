@@ -4,7 +4,7 @@
  */
 import { createContext, useContext, useState, useCallback } from 'react';
 import { authAPI } from '../api/endpoints';
-import { setAccessToken, clearAccessToken } from '../api/axios';
+import { setAccessToken, clearAccessToken, setReadOnly } from '../api/axios';
 
 const AuthContext = createContext(null);
 
@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
       const res = await authAPI.login({ email, password });
       const { access_token, user: userData } = res.data.data;
       setAccessToken(access_token);
+      setReadOnly(userData.role === 'viewer');
       setUser(userData);
       return { success: true };
     } catch (err) {
@@ -31,6 +32,7 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     try { await authAPI.logout(); } catch (_) {}
     clearAccessToken();
+    setReadOnly(false);
     setUser(null);
     window.location.href = '/login';
   }, []);

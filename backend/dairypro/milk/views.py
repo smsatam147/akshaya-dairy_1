@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from .models import MilkCollection, Shift
 from .serializers import MilkCollectionSerializer, MilkCollectionSyncSerializer
-from dairypro.core.permissions import IsFarmManagerOrAbove, IsAnyAuthenticated
+from dairypro.core.permissions import IsFarmManagerOrAbove, IsAnyAuthenticated, ReadOnlyForViewer
 from dairypro.core.utils import write_audit_log, success_response
 from dairypro.cattle.models import Cattle, CattleStatus
 
@@ -23,7 +23,7 @@ DEVIATION_THRESHOLD = Decimal('20.0')  # FR-M-04: alert if >20% drop vs 7-day av
 class MilkCollectionDetailView(generics.RetrieveUpdateDestroyAPIView):
     """GET/PATCH/DELETE /api/v1/milk/collections/<pk>/ — Retrieve, update, or delete an entry."""
     serializer_class   = MilkCollectionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ReadOnlyForViewer]
     queryset           = MilkCollection.objects.select_related('cattle', 'field_worker')
 
     def perform_update(self, serializer):
@@ -56,7 +56,7 @@ class MilkCollectionDetailView(generics.RetrieveUpdateDestroyAPIView):
 class MilkCollectionListCreateView(generics.ListCreateAPIView):
     """GET/POST /api/v1/milk/collections/"""
     serializer_class   = MilkCollectionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ReadOnlyForViewer]
     filterset_fields   = ['collection_date', 'shift', 'cattle', 'quality_grade']
 
     def get_queryset(self):
@@ -246,7 +246,7 @@ def cattle_monthly_summary_view(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, ReadOnlyForViewer])
 def sync_offline_entries(request):
     """POST /api/v1/milk/collections/sync/ — Batch offline sync (FR-AU-06)."""
     entries = request.data.get('entries', [])
