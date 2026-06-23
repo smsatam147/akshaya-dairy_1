@@ -244,7 +244,7 @@ export default function MilkCollection() {
               <select value={form.cattle_id} onChange={e => setForm(f => ({ ...f, cattle_id: e.target.value }))}
                 className={`mt-0.5 w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-primary-500 ${errors.cattle_id ? 'border-red-400' : 'border-gray-300'}`}>
                 <option value="">Select cattle…</option>
-                {cattle.map(c => <option key={c.id} value={c.id}>{c.tag_number} — {c.name || 'Unnamed'}</option>)}
+                {cattle.map(c => <option key={c.id} value={c.id}>{c.name || 'Unnamed'}</option>)}
               </select>
               {errors.cattle_id && <p className="text-red-500 text-xs mt-0.5">{errors.cattle_id}</p>}
             </div>
@@ -467,7 +467,6 @@ export default function MilkCollection() {
               <tr>
                 <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">#</th>
                 <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Cattle Name</th>
-                <th className="px-4 py-3 text-left border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Tag</th>
                 <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Morning (L)</th>
                 <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Evening (L)</th>
                 <th className="px-4 py-3 text-right border border-gray-300 bg-gray-100 sticky top-0 z-[5] shadow-[inset_0_-1px_0_#d1d5db]">Total (L)</th>
@@ -477,12 +476,11 @@ export default function MilkCollection() {
             </thead>
             <tbody>
               {cattleSummary.length === 0 ? (
-                <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No data yet</td></tr>
+                <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400 border border-gray-300">No data yet</td></tr>
               ) : cattleSummary.map((row, idx) => (
                 <tr key={row.cattle_id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                   <td className="px-4 py-2.5 text-gray-400 border border-gray-300">{idx + 1}</td>
                   <td className="px-4 py-2.5 font-medium text-gray-900 border border-gray-300">{row.cattle_name || '—'}</td>
-                  <td className="px-4 py-2.5 text-gray-500 text-xs border border-gray-300">{row.tag_number}</td>
                   <td className="px-4 py-2.5 text-right text-blue-700 border border-gray-300">{row.morning_litres.toFixed(2)}</td>
                   <td className="px-4 py-2.5 text-right text-orange-700 border border-gray-300">{row.evening_litres.toFixed(2)}</td>
                   <td className="px-4 py-2.5 text-right font-bold text-gray-900 border border-gray-300">{row.total_litres.toFixed(2)}</td>
@@ -495,7 +493,7 @@ export default function MilkCollection() {
               {cattleSummary.length > 0 && (
                 <tr className="bg-green-50 font-bold">
                   <td className="px-4 py-2.5 border border-gray-300"></td>
-                  <td className="px-4 py-2.5 text-green-900 border border-gray-300" colSpan={2}>Grand Total</td>
+                  <td className="px-4 py-2.5 text-green-900 border border-gray-300">Grand Total</td>
                   <td className="px-4 py-2.5 text-right text-blue-800 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.morning_litres, 0).toFixed(2)}</td>
                   <td className="px-4 py-2.5 text-right text-orange-800 border border-gray-300">{cattleSummary.reduce((s, r) => s + r.evening_litres, 0).toFixed(2)}</td>
                   <td className="px-4 py-2.5 text-right text-green-900 border-2 border-green-400">{grandTotal.toFixed(2)} L</td>

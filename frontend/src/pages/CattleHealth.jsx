@@ -113,7 +113,7 @@ export default function CattleHealth() {
         <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="p-4 border-b border-gray-100 space-y-2">
             <input value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search by tag or name…"
+              placeholder="Search by name…"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
             <select value={filter} onChange={e => setFilter(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
@@ -129,7 +129,7 @@ export default function CattleHealth() {
                 className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors
                   ${selected?.id === c.id ? 'bg-primary-50 border-l-4 border-primary-600' : ''}`}>
                 <div className="flex justify-between items-start">
-                  <span className="font-medium text-sm">{c.tag_number}</span>
+                  <span className="font-medium text-sm">{c.name || 'Unnamed'}</span>
                   <Badge label={c.status} variant={statusColor(c.status)} />
                 </div>
                 <div className="text-xs text-gray-500 mt-0.5">{c.breed} · {c.age_months}mo old</div>
@@ -145,7 +145,7 @@ export default function CattleHealth() {
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h2 className="font-bold text-lg">{selected.tag_number} — {selected.name || 'Unnamed'}</h2>
+                    <h2 className="font-bold text-lg">{selected.name || 'Unnamed'}</h2>
                     <p className="text-sm text-gray-500">{selected.breed} · {selected.age_months} months old</p>
                   </div>
                   <Badge label={selected.status} variant={statusColor(selected.status)} />
