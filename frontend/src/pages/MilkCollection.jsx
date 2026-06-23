@@ -186,7 +186,7 @@ export default function MilkCollection() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    const payload = { cattle: form.cattle_id, collection_date: today, shift: form.shift, quantity_litres: +form.quantity_litres };
+    const payload = { cattle: form.cattle_id, collection_date: selectedDate, shift: form.shift, quantity_litres: +form.quantity_litres };
     if (!isOnline) {
       const db = await getOfflineDB();
       await db.add(DB_STORE, payload);
